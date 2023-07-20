@@ -1,20 +1,49 @@
-.main {
+body {
   font-family: "Roboto", sans-serif;
   font-size: 14px;
+  line-height: 1.4em;
   background-color: #eeeeee;
   color: #4d4d4d;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  font-smoothing: antialiased;
   font-weight: 300;
-  margin-left: 67px;
-  margin-right: 67px;
-  text-align: left;
 }
 
-body {
-  background-color: #eeeeee;
-}
-
-/* Center all h1 elements */
 h1 {
   text-align: center;
   font-weight: bold;
+}
+
+.container {
+  /* display: flex;
+  flex-direction: column; */
+  text-align: center;
+  justify-content: center;
+  margin-left: 82.5px;
+  margin-right: 82.5px;
+  line-height: 1.4em;
+  font-kerning: normal;
+}
+
+.highlighted {
+  background-color: yellow;
+  position: relative; /* Ensure the toolkit is positioned relative to this element */
+}
+
+.toolkit {
+  position: absolute;
+  top: -30px; /* Adjust this value to position the toolkit above the highlighted group */
+  left: 0;
+  display: none;
+  background-color: #f1f1f1;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+}
+@media (min-width: 48em) {
 }
