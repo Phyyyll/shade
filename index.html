@@ -3,81 +3,121 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="styles.css" />
-    <title>Highlighter</title>
+    <title>Testing</title>
+    <style>
+      .permanent-highlight {
+        background-color: green;
+        color: white;
+      }
+
+      .dislike-highlight {
+        background-color: red;
+        color: white;
+      }
+
+      .do-not-understand-highlight {
+        background-color: yellow;
+        color: black;
+      }
+    </style>
   </head>
   <body>
-    <div class="main">
-      <h1>Simple highlight example</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vitae magna
-        lacus. Sed rhoncus tortor eget venenatis faucibus. Vivamus quis nunc vel
-        eros volutpat auctor. Suspendisse sit amet lorem tristique lectus
-        hendrerit aliquet. Aliquam erat volutpat. Vivamus malesuada, neque at
-        consectetur semper, nibh urna ullamcorper metus, in dapibus arcu massa
-        feugiat erat. Nullam hendrerit malesuada dictum. Nullam mattis orci
-        diam, eu accumsan est maximus quis. Cras mauris nibh, bibendum in
-        pharetra vitae, porttitor at ante. Duis pharetra elit ante, ut feugiat
-        nibh imperdiet eget. Aenean at leo consectetur, sodales sem sit amet,
-        consectetur massa. Ut blandit erat et turpis vestibulum euismod. Cras
-        vitae molestie libero, vel gravida risus. Curabitur dapibus risus eu
-        justo maximus, efficitur blandit leo porta. Donec dignissim felis ac
-        turpis pharetra lobortis. Sed quis vehicula nulla.
-      </p>
+    <p>
+      Randomness and random numbers have traditionally been used for a variety
+      of purposes, for example games such as dice games. With the advent of
+      computers, people recognized the need for a means of introducing
+      randomness into a computer program. Surprising as it may seem, however, it
+      is difficult to get a computer to do something by chance. A computer
+      running a program follows its instructions blindly and is therefore
+      completely predictable.
+    </p>
 
-      <h1>Example with tooltip</h1>
-      <p id="two">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vitae magna
-        lacus. Sed rhoncus tortor eget venenatis faucibus. Vivamus quis nunc vel
-        eros volutpat auctor. Suspendisse sit amet lorem tristique lectus
-        hendrerit aliquet. Aliquam erat volutpat. Vivamus malesuada, neque at
-        consectetur semper, nibh urna ullamcorper metus, in dapibus arcu massa
-        feugiat erat. Nullam hendrerit malesuada dictum. Nullam mattis orci
-        diam, eu accumsan est maximus quis. Cras mauris nibh, bibendum in
-        pharetra vitae, porttitor at ante. Duis pharetra elit ante, ut feugiat
-        nibh imperdiet eget. Aenean at leo consectetur, sodales sem sit amet,
-        consectetur massa. Ut blandit erat et turpis vestibulum euismod. Cras
-        vitae molestie libero, vel gravida risus. Curabitur dapibus risus eu
-        justo maximus, efficitur blandit leo porta. Donec dignissim felis ac
-        turpis pharetra lobortis. Sed quis vehicula nulla.
-      </p>
+    <form>
+      <input
+        type="radio"
+        name="feedback"
+        id="like"
+        value="Like"
+        onclick="toggleHighlight()"
+      />
+      <label for="like">Like</label>
 
-      <h1>Example with url and smiley</h1>
-      <p id="three">
-        Lorem ipsum dolor sit amet, http://www.google.fr consectetur adipiscing
-        elit. In vitae magna lacus. Sed rhoncus tortor eget venenatis faucibus.
-        Vivamus quis nunc vel eros volutpat auctor. Suspendisse sit amet lorem
-        tristique lectus hendrerit aliquet. Aliquam erat volutpat. Vivamus
-        malesuada, neque at consectetur semper, nibh urna ullamcorper metus, in
-        dapibus arcu massa 😘 feugiat erat. Nullam hendrerit malesuada dictum.
-        Nullam mattis orci diam, eu accumsan est maximus quis. Cras mauris nibh,
-        bibendum in pharetra vitae, porttitor at ante. Duis pharetra elit ante,
-        ut feugiat nibh imperdiet eget. Aenean at leo consectetur, sodales sem
-        sit amet, consectetur massa. Ut blandit erat et turpis vestibulum
-        euismod. Cras vitae molestie libero, vel gravida risus. Curabitur
-        dapibus risus eu justo maximus, efficitur blandit leo porta. Donec
-        dignissim felis ac turpis pharetra lobortis. Sed quis vehicula nulla.
-      </p>
+      <input
+        type="radio"
+        name="feedback"
+        id="dislike"
+        value="Dislike"
+        onclick="toggleHighlight()"
+      />
+      <label for="dislike">Dislike</label>
 
-      <h1>
-        Custom style function highlight example (if the range contains ipsum)
-      </h1>
-      <p id="four">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vitae magna
-        lacus. Sed rhoncus tortor eget venenatis faucibus. Vivamus quis nunc vel
-        eros volutpat auctor. Suspendisse sit amet lorem tristique lectus
-        hendrerit aliquet. Aliquam erat volutpat. Vivamus malesuada, neque at
-        consectetur semper, nibh urna ullamcorper metus, in dapibus arcu massa
-        feugiat erat. Nullam hendrerit malesuada dictum. Nullam mattis orci
-        diam, eu accumsan est maximus quis. Cras mauris nibh, bibendum in
-        pharetra vitae, porttitor at ante. Duis pharetra elit ante, ut feugiat
-        nibh imperdiet eget. Aenean at leo consectetur, sodales sem sit amet,
-        consectetur massa. Ut blandit erat et turpis vestibulum euismod. Cras
-        vitae molestie libero, vel gravida risus. Curabitur dapibus risus eu
-        justo maximus, efficitur blandit leo porta. Donec dignissim felis ac
-        turpis pharetra lobortis. Sed quis vehicula nulla.
-      </p>
-    </div>
-    <script src="script.js"></script>
+      <input
+        type="radio"
+        name="feedback"
+        id="do_not_understand"
+        value="Do not understand"
+        onclick="toggleHighlight()"
+      />
+      <label for="do_not_understand">Do not understand</label>
+
+      <input
+        type="radio"
+        name="feedback"
+        id="erase"
+        value="Erase"
+        onclick="toggleHighlight()"
+      />
+      <label for="erase">Erase</label>
+    </form>
+
+    <script>
+      function toggleHighlight() {
+        const likeButton = document.getElementById("like");
+        const dislikeButton = document.getElementById("dislike");
+        const doNotUnderstandButton =
+          document.getElementById("do_not_understand");
+        const paragraph = document.querySelector("p");
+
+        if (
+          likeButton.checked ||
+          dislikeButton.checked ||
+          doNotUnderstandButton.checked
+        ) {
+          paragraph.addEventListener("mouseup", highlightText);
+        } else {
+          paragraph.removeEventListener("mouseup", highlightText);
+        }
+      }
+
+      function highlightText() {
+        const selection = window.getSelection();
+        if (!selection.isCollapsed) {
+          const range = selection.getRangeAt(0);
+          const span = document.createElement("span");
+
+          if (document.getElementById("dislike").checked) {
+            span.classList.add("dislike-highlight");
+          } else if (document.getElementById("do_not_understand").checked) {
+            span.classList.add("do-not-understand-highlight");
+          } else {
+            span.classList.add("permanent-highlight");
+          }
+
+          // Remove existing highlights that intersect with the range
+          const existingSpans = document.querySelectorAll("span");
+          existingSpans.forEach((existingSpan) => {
+            if (range.intersectsNode(existingSpan)) {
+              const parent = existingSpan.parentNode;
+              const textNode = document.createTextNode(
+                existingSpan.textContent
+              );
+              parent.replaceChild(textNode, existingSpan);
+            }
+          });
+
+          range.surroundContents(span);
+        }
+      }
+    </script>
   </body>
 </html>
