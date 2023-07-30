@@ -71,12 +71,18 @@
       // Add your JavaScript code here
       let highlightColor = "green";
       let selectedButton = "Like"; // Default value
+      let logMessages = []; // Array to store the log messages
 
       function setHighlightColor(color) {
         highlightColor = color;
         selectedButton = document
           .querySelector('input[name="action"]:checked')
           .nextSibling.textContent.trim();
+      }
+
+      function setStartButton() {
+        selectedButton = "Start";
+        highlightColor = "transparent"; // Reset the highlight color to "transparent"
       }
 
       function handleHighlight() {
@@ -94,26 +100,85 @@
           document.execCommand("removeFormat");
         }
         document.designMode = "off";
-        logHighlightIndices(selectedButton);
+        collectHighlightIndices(selectedButton);
         window.getSelection().removeAllRanges();
       }
 
-      function logHighlightIndices(button) {
+      function collectHighlightIndices(button) {
         const container = document.getElementById("container");
         if (!container) return;
 
         const paragraph = container.querySelector("p");
         if (!paragraph) return;
 
-        const highlightedText = window.getSelection().toString();
-        const paragraphText = paragraph.textContent.trim();
-        const startIdx = paragraphText.indexOf(highlightedText) + 1;
-        const endIdx = startIdx + highlightedText.length - 1;
+        const selection = window.getSelection();
+        if (!selection.toString()) return; // No highlighted text
 
-        console.log(
-          `Highlight starts at index: ${startIdx}, and ends at index: ${endIdx}`
-        );
-        console.log(`Selected button: ${button}`);
+        const range = selection.getRangeAt(0);
+        const preSelectionRange = range.cloneRange();
+        preSelectionRange.selectNodeContents(paragraph);
+        preSelectionRange.setEnd(range.startContainer, range.startOffset);
+
+        const startIdx = preSelectionRange.toString().length;
+        const endIdx = startIdx + selection.toString().length - 1;
+
+        let existingLogIndex = -1;
+        for (let i = 0; i < logMessages.length; i++) {
+          const log = logMessages[i];
+          const matchStart = parseInt(log.message.match(/Start: (\d+)/)[1], 10);
+          const matchEnd = parseInt(log.message.match(/End: (\d+)/)[1], 10);
+          const logButton = log.message.match(/Type: (.+)/)[1];
+
+          if (
+            startIdx <= matchEnd &&
+            endIdx >= matchStart &&
+            logButton === button
+          ) {
+            // The new highlight overlaps with an existing highlight for the same button
+            existingLogIndex = i;
+            break;
+          }
+        }
+
+        if (existingLogIndex !== -1) {
+          // Update the "End" index of the existing log message
+          const logMessage = logMessages[existingLogIndex].message;
+          const updatedLogMessage = logMessage.replace(
+            /End: \d+/,
+            `End: ${endIdx}`
+          );
+          logMessages[existingLogIndex].message = updatedLogMessage;
+        } else {
+          // Format the log message and add a new entry to the logMessages array
+          const logMessage = `%cStart: ${startIdx} - End: ${endIdx} - Type: ${button}`;
+          const logColor = getLogColor(button);
+          logMessages.push({ message: logMessage, color: logColor });
+        }
+
+        updateConsole();
+      }
+
+      function getLogColor(button) {
+        switch (button) {
+          case "Like":
+            return "color: green;";
+          case "Dislike":
+            return "color: red;";
+          case "Do not understand":
+            return "color: yellow;";
+          default:
+            return "color: black;";
+        }
+      }
+
+      function updateConsole() {
+        // Clear previous logs
+        console.clear();
+
+        // Print consolidated logs
+        for (const log of logMessages) {
+          console.log(log.message, log.color);
+        }
       }
     </script>
   </body>
