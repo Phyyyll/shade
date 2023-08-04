@@ -3,7 +3,6 @@
   <head>
     <title>Testing</title>
     <style>
-      /* Add your CSS styles here */
       .highlighted {
         background-color: yellow;
       }
@@ -68,10 +67,9 @@
       </div>
     </form>
     <script>
-      // Add your JavaScript code here
       let highlightColor = "green";
-      let selectedButton = "Like"; // Default value
-      let logMessages = []; // Array to store the log messages
+      let selectedButton = "Like";
+      let logMessages = [];
 
       function setHighlightColor(color) {
         highlightColor = color;
@@ -82,7 +80,7 @@
 
       function setStartButton() {
         selectedButton = "Start";
-        highlightColor = "transparent"; // Reset the highlight color to "transparent"
+        highlightColor = "transparent";
       }
 
       function handleHighlight() {
@@ -112,15 +110,15 @@
         if (!paragraph) return;
 
         const selection = window.getSelection();
-        if (!selection.toString()) return; // No highlighted text
+        if (!selection.toString()) return;
 
         const range = selection.getRangeAt(0);
         const preSelectionRange = range.cloneRange();
         preSelectionRange.selectNodeContents(paragraph);
         preSelectionRange.setEnd(range.startContainer, range.startOffset);
 
-        const startIdx = preSelectionRange.toString().length;
-        const endIdx = startIdx + selection.toString().length - 1;
+        const startIdx = preSelectionRange.toString().length - 10;
+        const endIdx = startIdx + selection.toString().length;
 
         let existingLogIndex = -1;
         for (let i = 0; i < logMessages.length; i++) {
@@ -134,14 +132,12 @@
             endIdx >= matchStart &&
             logButton === button
           ) {
-            // The new highlight overlaps with an existing highlight for the same button
             existingLogIndex = i;
             break;
           }
         }
 
         if (existingLogIndex !== -1) {
-          // Update the "End" index of the existing log message
           const logMessage = logMessages[existingLogIndex].message;
           const updatedLogMessage = logMessage.replace(
             /End: \d+/,
@@ -149,7 +145,6 @@
           );
           logMessages[existingLogIndex].message = updatedLogMessage;
         } else {
-          // Format the log message and add a new entry to the logMessages array
           const logMessage = `%cStart: ${startIdx} - End: ${endIdx} - Type: ${button}`;
           const logColor = getLogColor(button);
           logMessages.push({ message: logMessage, color: logColor });
@@ -172,10 +167,8 @@
       }
 
       function updateConsole() {
-        // Clear previous logs
         console.clear();
 
-        // Print consolidated logs
         for (const log of logMessages) {
           console.log(log.message, log.color);
         }
