@@ -15,46 +15,29 @@
     </style>
   </head>
   <body>
-    <form style="display: flex; flex-direction: column; gap: 24">
+    <form
+      id="highlightForm"
+      style="display: flex; flex-direction: column; gap: 24"
+    >
       <div style="display: flex; gap: 16px; align-items: center">
         <label>
-          <input
-            type="radio"
-            name="action"
-            value="green"
-            onclick="setHighlightColor(this.value);"
-          />
+          <input type="radio" name="action" value="green" />
           Like
         </label>
         <label>
-          <input
-            type="radio"
-            name="action"
-            value="red"
-            onclick="setHighlightColor(this.value);"
-          />
+          <input type="radio" name="action" value="red" />
           Dislike
         </label>
         <label>
-          <input
-            type="radio"
-            name="action"
-            value="yellow"
-            onclick="setHighlightColor(this.value);"
-          />
+          <input type="radio" name="action" value="yellow" />
           Do not understand
         </label>
         <label>
-          <input
-            type="radio"
-            name="action"
-            value="transparent"
-            onclick="setHighlightColor(this.value);"
-          />
+          <input type="radio" name="action" value="transparent" />
           Erase
         </label>
       </div>
-      <div id="container" onmouseup="handleHighlight()">
+      <div id="container">
         <p>
           Technology has transformed the way we live, work, and communicate.
           From the invention of the wheel to the creation of the internet, each
@@ -66,113 +49,6 @@
         </p>
       </div>
     </form>
-    <script>
-      let highlightColor = "green";
-      let selectedButton = "Like";
-      let logMessages = [];
-
-      function setHighlightColor(color) {
-        highlightColor = color;
-        selectedButton = document
-          .querySelector('input[name="action"]:checked')
-          .nextSibling.textContent.trim();
-      }
-
-      function setStartButton() {
-        selectedButton = "Start";
-        highlightColor = "transparent";
-      }
-
-      function handleHighlight() {
-        const highlighted = window.getSelection();
-        if (!highlighted.toString().replace(/\s/g, "")) return;
-        const range = highlighted.getRangeAt(0);
-        document.designMode = "on";
-        if (range) {
-          highlighted.removeAllRanges();
-          highlighted.addRange(range);
-        }
-        if (highlightColor !== "transparent") {
-          document.execCommand("backColor", false, highlightColor);
-        } else {
-          document.execCommand("removeFormat");
-        }
-        document.designMode = "off";
-        collectHighlightIndices(selectedButton);
-        window.getSelection().removeAllRanges();
-      }
-
-      function collectHighlightIndices(button) {
-        const container = document.getElementById("container");
-        if (!container) return;
-
-        const paragraph = container.querySelector("p");
-        if (!paragraph) return;
-
-        const selection = window.getSelection();
-        if (!selection.toString()) return;
-
-        const range = selection.getRangeAt(0);
-        const preSelectionRange = range.cloneRange();
-        preSelectionRange.selectNodeContents(paragraph);
-        preSelectionRange.setEnd(range.startContainer, range.startOffset);
-
-        const startIdx = preSelectionRange.toString().length - 10;
-        const endIdx = startIdx + selection.toString().length;
-
-        let existingLogIndex = -1;
-        for (let i = 0; i < logMessages.length; i++) {
-          const log = logMessages[i];
-          const matchStart = parseInt(log.message.match(/Start: (\d+)/)[1], 10);
-          const matchEnd = parseInt(log.message.match(/End: (\d+)/)[1], 10);
-          const logButton = log.message.match(/Type: (.+)/)[1];
-
-          if (
-            startIdx <= matchEnd &&
-            endIdx >= matchStart &&
-            logButton === button
-          ) {
-            existingLogIndex = i;
-            break;
-          }
-        }
-
-        if (existingLogIndex !== -1) {
-          const logMessage = logMessages[existingLogIndex].message;
-          const updatedLogMessage = logMessage.replace(
-            /End: \d+/,
-            `End: ${endIdx}`
-          );
-          logMessages[existingLogIndex].message = updatedLogMessage;
-        } else {
-          const logMessage = `%cStart: ${startIdx} - End: ${endIdx} - Type: ${button}`;
-          const logColor = getLogColor(button);
-          logMessages.push({ message: logMessage, color: logColor });
-        }
-
-        updateConsole();
-      }
-
-      function getLogColor(button) {
-        switch (button) {
-          case "Like":
-            return "color: green;";
-          case "Dislike":
-            return "color: red;";
-          case "Do not understand":
-            return "color: yellow;";
-          default:
-            return "color: black;";
-        }
-      }
-
-      function updateConsole() {
-        console.clear();
-
-        for (const log of logMessages) {
-          console.log(log.message, log.color);
-        }
-      }
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
