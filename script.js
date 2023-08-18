@@ -21,20 +21,60 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleHighlight() {
     const highlighted = window.getSelection();
     if (!highlighted.toString().replace(/\s/g, "")) return;
+
     const range = highlighted.getRangeAt(0);
-    document.designMode = "on";
-    if (range) {
+    const partialWordRange = expandRangeToWholeWord(range);
+
+    if (partialWordRange) {
+      document.designMode = "on";
       highlighted.removeAllRanges();
-      highlighted.addRange(range);
+      highlighted.addRange(partialWordRange);
+
+      if (highlightColor !== "transparent") {
+        document.execCommand("backColor", false, highlightColor);
+      } else {
+        document.execCommand("removeFormat");
+      }
+
+      document.designMode = "off";
+      collectHighlightIndices(selectedButton);
+      window.getSelection().removeAllRanges();
     }
-    if (highlightColor !== "transparent") {
-      document.execCommand("backColor", false, highlightColor);
-    } else {
-      document.execCommand("removeFormat");
+  }
+
+  function expandRangeToWholeWord(partialRange) {
+    const startContainer = partialRange.startContainer;
+    const startOffset = partialRange.startOffset;
+    const endContainer = partialRange.endContainer;
+    const endOffset = partialRange.endOffset;
+
+    // Find the beginning of the word
+    let wordStartOffset = startOffset;
+    while (
+      wordStartOffset > 0 &&
+      !/\s/.test(startContainer.textContent.charAt(wordStartOffset - 1))
+    ) {
+      wordStartOffset--;
     }
-    document.designMode = "off";
-    collectHighlightIndices(selectedButton);
-    window.getSelection().removeAllRanges();
+
+    // Find the end of the word
+    let wordEndOffset = endOffset;
+    while (
+      wordEndOffset < endContainer.textContent.length &&
+      !/\s/.test(endContainer.textContent.charAt(wordEndOffset))
+    ) {
+      wordEndOffset++;
+    }
+
+    if (wordStartOffset === wordEndOffset) {
+      return null; // No valid word found
+    }
+
+    const wordRange = document.createRange();
+    wordRange.setStart(startContainer, wordStartOffset);
+    wordRange.setEnd(endContainer, wordEndOffset);
+
+    return wordRange;
   }
 
   function collectHighlightIndices(button) {
@@ -69,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (existingLogIndex !== -1) {
-      // We don't need to remove the existing log entry, just split it if necessary
       splitLogEntry(button, existingLogIndex, startIdx, endIdx);
     } else {
       const logItem = [startIdx.toString(), endIdx.toString()];
@@ -80,40 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updateConsole();
   }
 
-  function splitLogEntry(button, existingLogIndex, startIdx, endIdx) {
-    const logItem = logData[button][existingLogIndex];
-    const logStart = parseInt(logItem[0], 10);
-    const logEnd = parseInt(logItem[1], 10);
+  function splitLogEntry(button, existingLogIndex, startIdx, endIdx) {}
 
-    // Create a new log entry for the part before the new highlight
-    if (startIdx > logStart) {
-      const newLogItemBefore = [logStart.toString(), (startIdx - 1).toString()];
-      logData[button].splice(existingLogIndex, 0, newLogItemBefore);
-      existingLogIndex++;
-    }
-
-    // Create a new log entry for the part after the new highlight
-    if (endIdx < logEnd) {
-      const newLogItemAfter = [(endIdx + 1).toString(), logEnd.toString()];
-      logData[button].splice(existingLogIndex + 1, 0, newLogItemAfter);
-    }
-
-    // Update the existing log entry to reflect the new highlight
-    logItem[0] = startIdx.toString();
-    logItem[1] = endIdx.toString();
-  }
-
-  function removeOverlappingEntries(button, startIdx, endIdx) {
-    for (const type in logData) {
-      if (type !== button) {
-        logData[type] = logData[type].filter(
-          (logItem) =>
-            startIdx > parseInt(logItem[1], 10) ||
-            endIdx < parseInt(logItem[0], 10)
-        );
-      }
-    }
-  }
+  function removeOverlappingEntries(button, startIdx, endIdx) {}
 
   function updateConsole() {
     console.clear();
